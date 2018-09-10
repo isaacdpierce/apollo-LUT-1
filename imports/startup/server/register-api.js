@@ -1,8 +1,10 @@
 import { ApolloServer, gql } from 'apollo-server-express';
 import { WebApp } from 'meteor/webapp';
 import { getUser } from 'meteor/apollo';
+import merge from 'lodash/merge';
 
 import ResolutionsSchema from '../../api/resolutions/Resolutions.graphql';
+import ResolutionsResolvers from '../../api/resolutions/resolvers';
 
 const testSchema = `
 type Query {
@@ -13,25 +15,15 @@ type Query {
 
 const typeDefs = [testSchema, ResolutionsSchema];
 
-const resolvers = {
+const testResolvers = {
   Query: {
     hi() {
       return 'Hello from resolvers';
     },
-    resolutions() {
-      return [
-        {
-          _id: 'asdfasd',
-          name: 'Get Stuff done!',
-        },
-        {
-          _id: 'oaiewfaoiwf',
-          name: 'Get More Stuff done!',
-        },
-      ];
-    },
   },
 };
+
+const resolvers = merge(testResolvers, ResolutionsResolvers);
 
 const server = new ApolloServer({
   typeDefs,
